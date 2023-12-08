@@ -41,7 +41,16 @@ $\psi(z) = \arctan \left( \frac{z}{z_\mathrm{R}} \right)$
 The intensity is then given by
 
 $I(r,z) \sim I_0 \exp \left( \frac{-2 \cdot r^2}{w(z)^2}\right) \exp \left( -2 \cdot i \left(kz +k \frac{r^2}{2R(z)}\right)\right)$
+
+A Gaussian function is
+
+$f(x) = \frac{1}{\sigma \sqrt 2} \exp\left(- \frac{x^2}{2 \sigma^2} \right)$
 """
+
+# ╔═╡ e5193200-9c24-4327-83f3-4094b1686767
+md"
+For $w=w_0$ the intensity of the Gaussian beams falls off to $1/\textrm{e}^2$.
+"
 
 # ╔═╡ 8790ee5f-5579-444f-8508-070ada312a83
 md""" # Numerical Experiment
@@ -52,7 +61,18 @@ md""" # Numerical Experiment
 λ = 633e-9
 
 # ╔═╡ e881e496-2561-417c-b4a4-c600e020bdf6
-w₀ = 0.8e-3
+w₀ = 0.4e-3
+
+# ╔═╡ f536f41d-0dda-4d4c-8410-a4d1eee96633
+begin
+	r = range(-3e-3, 3e-3, 500)
+	f_g(r) = exp.(- 2 .* r.^2 ./ w₀^2)
+	plot(r, f_g.(r), label="Gaussian Beam", xlabel="Position in m", ylabel="normalized intensity")
+
+	plot!([-w₀, -w₀], [0, 1], linecolor=:red, label="1/e^2 intensity")
+	plot!([w₀, w₀], [0, 1], linecolor=:red, label=nothing)
+
+end
 
 # ╔═╡ 487cca13-1710-4dc0-8823-8695137460ee
 z_R = π * w₀^2 / λ
@@ -67,7 +87,7 @@ w(55e-3)
 gb = GaussianBeam(;λ, w0=w₀)
 
 # ╔═╡ 497182b7-6b49-4ed8-ad46-dc8776acefb5
-plot([FreeSpace(1)], gb, ylabel="Spatial profile in m", title="Gaussian Beam propagated 1m")
+plot([FreeSpace(10)], gb, ylabel="Spatial profile in m", title="Gaussian Beam propagated 1m")
 
 # ╔═╡ f95e6581-0876-4154-8a74-38f2309c61c0
 plot([ThinLens(4.5e-3), FreeSpace(4.50e-3)], gb, ylabel="Spatial profile in m", title="Gaussian Beam Focussed by a 4.5mm lens")
@@ -87,22 +107,26 @@ The waist given after focussing is $(round(w_after_lens, digits=7))m
 # ╔═╡ c92c2071-5569-489a-a4a4-cad4d31fec2f
 md"""
 # Measuring of Beam Divergence
+
+To measure the beam divergence, you need to be far away such that the approximation 
+
+$w(z) = w_0 \, \sqrt{ 1+ {\left( \frac{z}{z_\mathrm{R}} \right)}^2}\approx w_0\frac{z}{z_\mathrm{R}}$
+
+is valid.
+
+In experiments, depending on $w_0$, this can be hard to achieve.
 """
 
 # ╔═╡ 1bfae4ab-1963-4e88-a004-b2451a2618c7
-zs = collect(0:50e-3:250e-3)
+zs =  [10, 60, 110, 140, 180, 210, 240, 270, 290] .* 10^(-3)
 
 # ╔═╡ 76346a70-692f-4ba4-bfe8-3609f3a4e6f3
-w_z = [0.754, 0.768, 0.776, 0.78, 0.791, 0.802] .* 10^(-3) ./ 2
+w_z = [1.53, 1.56, 1.59, 1.61, 1.62, 1.65, 1.67, 1.68, 1.69] .* 10^(-3) ./ 2
 
 # ╔═╡ 2d5d7a50-d29e-4807-90c2-01ad8f5b804d
-md"The divergence is given by 
+md"The divergence and waist are connected with 
 
-$\theta = \frac{w(z)}{z}$
-
-Reshuffling gives us
-
-$w(z) = \theta \cdot  z$.
+$w(z) = \theta \cdot  z + \textrm{const}$.
 
 So if we fit the experimental measurements, the slope will be the divergence.
 
@@ -1551,6 +1575,8 @@ version = "1.4.1+1"
 # ╠═a87ae66e-95b1-11ee-29a5-d99cfec531f9
 # ╠═77ecd2e5-3b58-4a17-94c2-1230d0f5e20b
 # ╟─c29fe8c6-1c2b-4d82-8eef-dfb7cff920da
+# ╟─e5193200-9c24-4327-83f3-4094b1686767
+# ╟─f536f41d-0dda-4d4c-8410-a4d1eee96633
 # ╟─8790ee5f-5579-444f-8508-070ada312a83
 # ╠═0bb0fb09-f4bd-4ef3-ad23-58f5777f6dfd
 # ╠═e881e496-2561-417c-b4a4-c600e020bdf6
@@ -1558,7 +1584,7 @@ version = "1.4.1+1"
 # ╠═e43e3ee4-d69b-4f99-9ebd-90c674d8dd2a
 # ╠═f43ed8ac-c4a9-40b5-9839-283fdef305e7
 # ╠═381831af-a25d-47cc-8fcb-4b7f292e5e38
-# ╠═497182b7-6b49-4ed8-ad46-dc8776acefb5
+# ╟─497182b7-6b49-4ed8-ad46-dc8776acefb5
 # ╠═f95e6581-0876-4154-8a74-38f2309c61c0
 # ╠═1fc9e504-db8d-4efd-808d-0c407493b7fc
 # ╟─e69e2710-be1b-4821-8f19-a0d74e28d085
@@ -1573,7 +1599,7 @@ version = "1.4.1+1"
 # ╠═36291ef8-b47e-48c4-b64b-25c91b688cef
 # ╠═ed587b8e-7f20-4740-9f08-f6bff77493d2
 # ╟─0ffe9473-8711-4184-be86-d35b87076a77
-# ╠═55a68ed4-52fb-4f54-9f97-f99732da7eac
+# ╟─55a68ed4-52fb-4f54-9f97-f99732da7eac
 # ╟─64117772-d239-4f14-93b3-c9fc812f4c31
 # ╠═0a6379fc-ce9f-4cc7-beae-414c106a665d
 # ╟─00000000-0000-0000-0000-000000000001
