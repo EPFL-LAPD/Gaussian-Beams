@@ -8,6 +8,7 @@ Download [Julia Lang](https://julialang.org/downloads/) and run the following:
 julia> ]add Pluto
 
 julia> using Pluto
-```
 
-And open the file [gaussian_optics_TP.jl](gaussian_optics_TP.jl).
+julia> Pluto.run()
+```
+A browser should pop-up, open the file [gaussian_optics_TP.jl](gaussian_optics_TP.jl).
