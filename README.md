@@ -1,6 +1,7 @@
 # Gaussian-Beams
 
 Introduction to Gaussian Beams.
+See the [generated HTML here](https://epfl-lapd.github.io/Gaussian-Beams/notebooks/gaussian_optics_TP.html)
 
 Download [Julia Lang](https://julialang.org/downloads/) and run the following:
 
